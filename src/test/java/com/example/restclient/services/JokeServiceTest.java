@@ -31,18 +31,20 @@ public class JokeServiceTest {
     @Test
     public void getJokeAsync() {
         String joke = service.getJokeAsync("Adolfo", "Benedetti")
+                .doOnNext(logger::info)
                 .block(Duration.ofSeconds(2));
-        logger.info(joke);
         assertTrue(joke.contains("Adolfo") || joke.contains("Benedetti"));
     }
 
     @Test
     public void useStepVerifier() {
-        StepVerifier.create(service.getJokeAsync("Adolfo", "Benedetti"))
+        StepVerifier.create(
+                service.getJokeAsync("Adolfo", "Benedetti")
+                        .doOnNext(logger::info))
                 .assertNext(joke -> {
-                    logger.info(joke);
                     assertTrue(joke.contains("Adolfo") || joke.contains("Benedetti"));
                 })
+
                 .verifyComplete();
     }
 

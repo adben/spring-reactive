@@ -10,15 +10,16 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+
 @Service
 public class JokeService {
-    private RestTemplate template;
     private Logger logger = LoggerFactory.getLogger(JokeService.class);
 
-    private WebClient client = WebClient.create("http://api.icndb.com");
-
-
     private static final String BASE = "http://api.icndb.com/jokes/random?limitTo=[nerdy]";
+
+    private RestTemplate template;
+
+    private WebClient client = WebClient.create("http://api.icndb.com");
 
     @Autowired
     public JokeService(RestTemplateBuilder builder) {
@@ -43,5 +44,6 @@ public class JokeService {
                 .bodyToMono(JokeResponse.class)
                 .map(jokeResponse -> jokeResponse.getValue().getJoke());
     }
-
 }
+
+
