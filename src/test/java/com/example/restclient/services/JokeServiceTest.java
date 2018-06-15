@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import reactor.test.StepVerifier;
 
 import java.time.Duration;
 
@@ -32,7 +33,17 @@ public class JokeServiceTest {
         String joke = service.getJokeAsync("Adolfo", "Benedetti")
                 .block(Duration.ofSeconds(2));
         logger.info(joke);
-        assertTrue(joke.contains("Craig") || joke.contains("Benedetti"));
+        assertTrue(joke.contains("Adolfo") || joke.contains("Benedetti"));
+    }
+
+    @Test
+    public void useStepVerifier() {
+        StepVerifier.create(service.getJokeAsync("Adolfo", "Benedetti"))
+                .assertNext(joke -> {
+                    logger.info(joke);
+                    assertTrue(joke.contains("Adolfo") || joke.contains("Benedetti"));
+                })
+                .verifyComplete();
     }
 
 }
